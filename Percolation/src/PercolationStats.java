@@ -9,16 +9,25 @@ public class PercolationStats
     public PercolationStats(int N, int T)
     {
         Percolation percolation = null;
+        if (N <= 0 || T <= 0)   {   throw new IllegalArgumentException("Invalid input"); }
         data = new double[T];
         this.times = T;
         for (int i = 0; i < T; i++)
         {
+            int count = 0, k = 0, j = 0;
             percolation = new Percolation(N);
-            while(!percolation.percolate())
+            while (!percolation.percolates())
             {
-                percolation.open(StdRandom.uniform(1, N+1), StdRandom.uniform(1, N+1));
+                k = StdRandom.uniform(1, N + 1);
+                j = StdRandom.uniform(1, N + 1);
+                if (percolation.isOpen(k, j))    { continue; }
+                else
+                {
+                    percolation.open(k, j);
+                    count++;
+                }
             }
-            data[i] = (double)percolation.count/(double)(N*N);
+            data[i] = (double) count / (double) (N * N);
         }
     }
 
@@ -36,14 +45,14 @@ public class PercolationStats
     {
         double mean = mean();
         double stddev = stddev();
-        return mean-1.96*stddev/(Math.sqrt(times));
+        return mean - 1.96 * stddev / (Math.sqrt(times));
     }
 
     public double confidenceHi()
     {
         double mean = mean();
         double stddev = stddev();
-        return mean+1.96*stddev/(Math.sqrt(times));
+        return mean + 1.96 * stddev / (Math.sqrt(times));
     }
 
     public static void main(String[] args)
@@ -53,8 +62,8 @@ public class PercolationStats
 
         PercolationStats percolationStats = new PercolationStats(N, T);
 
-        System.out.println("mean                    ="+percolationStats.mean());
-        System.out.println("stddev                  ="+percolationStats.stddev());
-        System.out.println("95% confidence interval ="+percolationStats.confidenceLo()+", "+percolationStats.confidenceHi());
+        System.out.println("mean                    =" + percolationStats.mean());
+        System.out.println("stddev                  =" + percolationStats.stddev());
+        System.out.println("95% confidence interval =" + percolationStats.confidenceLo() + ", " + percolationStats.confidenceHi());
     }
 }
