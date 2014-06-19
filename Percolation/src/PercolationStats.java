@@ -60,10 +60,12 @@ public class PercolationStats
         int N = StdIn.readInt();
         int T = StdIn.readInt();
 
+        Stopwatch stopwatch = new Stopwatch();
         PercolationStats percolationStats = new PercolationStats(N, T);
 
         System.out.println("mean                    =" + percolationStats.mean());
         System.out.println("stddev                  =" + percolationStats.stddev());
         System.out.println("95% confidence interval =" + percolationStats.confidenceLo() + ", " + percolationStats.confidenceHi());
+        System.out.println("Running time is: " + stopwatch.elapsedTime());
     }
 }
