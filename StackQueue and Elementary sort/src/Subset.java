@@ -1,7 +1,7 @@
 /**
  * Created by clark on 6/29/14.
  */
-public class Subnet
+public class Subset
 {
     public static void main(String[] args)
     {
@@ -14,7 +14,7 @@ public class Subnet
         }
 
         int k = Integer.parseInt(args[0]);
-        for (int i = 0; i < k ;i++)
+        for (int i = 0; i < k; i++)
         {
             StdOut.println(rq.dequeue());
         }

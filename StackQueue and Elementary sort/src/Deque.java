@@ -12,9 +12,9 @@ public class Deque<Item> implements Iterable<Item>
 
     private class Node
     {
-        Item item;
-        Node previous;
-        Node next;
+        private Item item;
+        private Node previous;
+        private Node next;
     }
 
     public Deque()
@@ -27,77 +27,60 @@ public class Deque<Item> implements Iterable<Item>
 
     public void addFirst(Item item)
     {
-        if (item == null) { throw new NoSuchElementException("item is empty!"); }
-        size++;
-        if (first == null)
-        {
-            first = new Node();
-            first.item = item;
-            first.previous = null;
-            first.next = null;
-            return;
-        }
+        if (item == null) { throw new NullPointerException("item is empty!"); }
+        Node temp = new Node();
+        temp.previous = null;
+        temp.next = first;
+        temp.item = item;
 
-        Node tempNode = new Node();
-        Node oldFirst = first;
-        tempNode.item = item;
-        tempNode.previous = null;
-        tempNode.next = oldFirst;
-        first = tempNode;
+        if (!isEmpty())
+            first.previous = temp;
+        first = temp;
+        if (last == null)
+            last = first;
+        size++;
     }
 
     public void addLast(Item item)
     {
-        if (item == null) { throw new NoSuchElementException("item is empty!"); }
-        size++;
+        if (item == null) { throw new NullPointerException("item is empty!"); }
+        Node temp = new Node();
+        temp.previous = last;
+        temp.next = null;
+        temp.item = item;
+
+        if (!isEmpty())
+            last.next = temp;
+        last = temp;
         if (first == null)
-        {
-            first = new Node();
-            first.item = item;
-            first.previous = null;
-            first.next = null;
-        }else if(last == null)
-        {
-            last = new Node();
-            first.next = last;
-            last.item = item;
-            last.previous = first;
-            last.next = null;
-        }else
-        {
-            Node tempNode = new Node();
-            tempNode.item = item;
-            tempNode.previous = last;
-            last.next = tempNode;
-            tempNode.next = null;
-            last = tempNode;
-        }
+            first = last;
+        size++;
     }
 
-    public void removeFirst()
+    public Item removeFirst()
     {
-       if (isEmpty())   { throw new UnsupportedOperationException("no item inside"); }
-       size--;
-       first = first.next;
-       if (size > 0)   { first.previous = null;    }
-       if (size == 1)  { last = null;  }
-    }
-
-    public void removeLast()
-    {
-        if (isEmpty())   { throw new UnsupportedOperationException("no item inside"); }
+        if (isEmpty())   { throw new NoSuchElementException("no item inside"); }
+        Item temp = first.item;
+        if (first.next != null)
+           first.next.previous = null;
+        if (first == last)
+           last = null;
+        first = first.next;
         size--;
-        if (size == 0)   {   first = null;   }
-        if (size == 1)
-        {
-            first.next = null;
-            last = null;
-        }
-        if (size > 1)
-        {
-            last = last.previous;
-            last.next = null;
-        }
+        return temp;
+    }
+
+    public Item removeLast()
+    {
+        if (isEmpty())   { throw new NoSuchElementException("no item inside"); }
+        Item temp = last.item;
+        if (last.previous != null)
+            last.previous.next = null;
+        if (last == first)
+            first = null;
+        last = last.previous;
+        size--;
+        return temp;
     }
 
     @Override
@@ -113,9 +96,17 @@ public class Deque<Item> implements Iterable<Item>
         public boolean hasNext()    { return current != null;   }
         public Item next()
         {
+            if (!hasNext())
+                throw new NoSuchElementException("no item inside");
             Item item = current.item;
             current = current.next;
             return item;
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException("not supported");
         }
     }
 

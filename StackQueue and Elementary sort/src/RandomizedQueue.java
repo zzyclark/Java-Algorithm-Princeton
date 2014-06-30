@@ -26,7 +26,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 
     public void enqueue(Item item)
     {
-        if (item == null)   { throw new NoSuchElementException("item is null"); }
+        if (item == null)   { throw new NullPointerException("item is null"); }
         if (size == data.length)
         {
              resizePlus();
@@ -41,6 +41,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
         int count = StdRandom.uniform(size);
         Item temp = data[count];
         data[count] = data [--size];
+        data[size] = null;
         if (size < data.length/4)
         {
             resizeMinus();
@@ -81,8 +82,18 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 
     private class ListIterator implements Iterator<Item>
     {
-        int current = 0;
-        int[] shuffledIndexes = new int[size];
+        private int current = 0;
+        private int[] shuffledIndexes = new int[size];
+
+        public int getCurrent()
+        {
+            return current;
+        }
+
+        public int[] getShuffledIndexes()
+        {
+            return shuffledIndexes;
+        }
 
         public boolean hasNext()
         {
@@ -109,6 +120,12 @@ public class RandomizedQueue<Item> implements Iterable<Item>
             }
             if (current >= size || size == 0)   {   throw new NoSuchElementException("no data inside"); }
             return data[shuffledIndexes[current++]];
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException("not supported");
         }
     }
 
